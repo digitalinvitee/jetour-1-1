@@ -242,10 +242,10 @@ if (bgMusic) {
 
   bgMusic.play().then(() => {
     musicPlaying = true;
-    if (musicIcon) musicIcon.textContent = "Ⅱ";
+    if (musicIcon) musicIcon.textContent = "ON";
   }).catch(() => {
     musicPlaying = false;
-    if (musicIcon) musicIcon.textContent = "♪";
+    if (musicIcon) musicIcon.textContent = "SOUND";
   });
 }
 /* ─── INTRO TIMELINE ─────────────────────────────────────── */
