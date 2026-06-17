@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+  <title>JETOUR Club · Private Journey</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@300;400;500;600;700&family=Orbitron:wght@500;600;700&family=Rajdhani:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <link href="style.css" rel="stylesheet" />
+</head>
+
+<body class="lock">
+
+  <div class="progress-bar" id="progressBar"></div>
+  <canvas id="particles"></canvas>
+
+  <!-- NAV BAR -->
+  <nav class="nav-bar" id="navBar">
+    <div class="nav-brand">
+      <img src="Logo.png" alt="JETOUR CLUB Logo" class="nav-logo">
+    </div>
+
+    <div class="nav-controls">
+      <div class="lang-switch">
+        <button class="lang active" data-lang="ka">GE</button>
+        <button class="lang" data-lang="en">EN</button>
+      </div>
+    </div>
+  </nav>
+  
+  <audio id="bgMusic" src="music.mp3" preload="auto" loop></audio>
+
+<button class="music-btn" id="musicBtn" type="button" aria-label="Toggle music">
+  <span id="musicIcon">♪</span>
+</button>
+
+  <!-- INTRO VIDEO -->
+  <section class="intro" id="intro">
+    <video autoplay class="intro-video" muted playsinline preload="auto">
+      <source src="video.mp4" type="video/mp4" />
+    </video>
+
+    <div class="intro-shade"></div>
+    <div class="intro-vignette"></div>
+
+    <div class="intro-brand">
+      <span class="intro-brand-text">JETOUR Georgia</span>
+    </div>
+
+    <div class="intro-copy">
+      <h4 class="intro-line line-1">
+        <span class="intro-stat">904</span>
+        <span class="intro-unit">hp</span>
+      </h4>
+
+      <h4 class="intro-line line-2">
+        <span class="intro-label">0 – 100 km/h</span>
+        <span class="intro-stat-mid">4.6<span class="intro-unit-mid">s</span></span>
+      </h4>
+
+      <div class="intro-accent-line" id="introGoldLine"></div>
+
+      <p class="intro-line line-3">
+        Up to <span>1,400 km</span> — one charge, one journey
+      </p>
+    </div>
+
+    <button class="skip-intro" id="skipIntro">
+      <span data-en="Enter" data-ka="შესვლა">შესვლა</span>
+      <svg fill="none" height="12" viewBox="0 0 12 12" width="12">
+        <path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2"></path>
+      </svg>
+    </button>
+  </section>
+
+  <main id="mainContent">
+
+    <!-- HERO -->
+    
+<!-- HERO -->
+<section class="hero hero-after-intro" id="hero">
+
+  <div class="hero-bg"></div>
+  <div class="hero-shade"></div>
+  <div class="hero-grain"></div>
+
+  <div class="hero-content">
+
+    <div class="hero-eyebrow">
+  <span class="hero-kicker">- Drive your future -</span>
+</div>
+
+    <!-- MAIN TITLE -->
+    <h1
+      class="hero-headline"
+      data-en="JETOUR CLUB ADVENTURE"
+      data-ka="JETOUR CLUB ADVENTURE">
+      JETOUR CLUB ADVENTURE
+    </h1>
+
+    <!-- META -->
+    <div class="hero-meta">
+
+      <div class="hero-meta-item">
+        <span
+          class="hero-meta-label"
+          data-en="Date"
+          data-ka="თარიღი">
+          თარიღი
+        </span>
+
+        <span class="hero-meta-val">
+          28.06.2026
+        </span>
+      </div>
+
+      <div class="hero-meta-divider"></div>
+
+      <div class="hero-meta-item">
+        <span
+          class="hero-meta-label"
+          data-en="Time"
+          data-ka="დრო">
+          დრო
+        </span>
+
+        <span class="hero-meta-val">
+          15:00
+        </span>
+      </div>
+
+      <div class="hero-meta-divider"></div>
+
+      <div class="hero-meta-item">
+        <span
+          class="hero-meta-label"
+          data-en="Route"
+          data-ka="მარშრუტი">
+          მარშრუტი
+        </span>
+
+        <span
+          class="hero-meta-val"
+          data-en="Tbilisi → Orbeti"
+          data-ka="თბილისი → ორბეთი">
+          თბილისი → ორბეთი
+        </span>
+      </div>
+
+    </div>
+
+    <!-- CTA -->
+    <a
+      href="#invitation"
+      class="cta-btn">
+
+      <span
+        data-en="Explore the Journey"
+        data-ka="მოგზაურობის ნახვა">
+        მოგზაურობის ნახვა
+      </span>
+
+      <span class="cta-arrow">→</span>
+
+    </a>
+
+  </div>
+
+  <!-- SCROLL INDICATOR -->
+  <div class="scroll-hint">
+    <span
+      data-en="Scroll"
+      data-ka="გადახვევა">
+      გადახვევა
+    </span>
+
+    <span class="scroll-hint-line"></span>
+  </div>
+
+</section>
+
+
+    <!-- INVITATION -->
+    <section class="invitation" id="invitation">
+      <div class="invitation-bg-accent"></div>
+
+      <div class="container narrow">
+        <div class="reveal">
+
+          <h2 class="invitation-title" data-en="We invite you to the JETOUR CLUB journey" data-ka="გიწვევთ JETOUR CLUB მოგზაურობაში">
+            კეთილი იყოს თქვენი მობრძანება <span>Jetour Club</span>-ში
+          </h2>
+        </div>
+
+        <div class="invitation-body reveal">
+          <p data-en="Some roads take us only to a destination. Others lead us to new impressions." data-ka="ზოგი გზა მხოლოდ დანიშნულების ადგილამდე მიგვიყვანს. ზოგი კი — ახალ შთაბეჭდილებებამდე.">
+            ზოგი გზა მხოლოდ დანიშნულების ადგილამდე მიგვიყვანს. ზოგი კი — ახალ შთაბეჭდილებებამდე.
+          </p>
+
+          <p data-en="The journey becomes even more meaningful when shared with like-minded people." data-ka="ეს გზა კიდევ უფრო საინტერესო ხდება, როდესაც მას თანამოაზრეებთან ერთად გადიხარ.">
+            ეს გზა კიდევ უფრო საინტერესო ხდება, როდესაც მას თანამოაზრეებთან ერთად გადიხარ.
+          </p>
+
+          <p data-en="We invite you to an exclusive Jetour Club gathering — a special journey that brings together new discoveries, inspiration, and people united by one value: moving forward." data-ka="გიწვევთ Jetour Club-ის ექსკლუზიურ შეხვედრაზე — განსაკუთრებულ მოგზაურობაზე, რომელიც აერთიანებს ახალ აღმოჩენებს, შთაგონებასა და ადამიანებს, რომლებსაც ერთი ღირებულება აერთიანებთ — მოძრაობა წინ.">
+            გიწვევთ Jetour Club-ის ექსკლუზიურ შეხვედრაზე — განსაკუთრებულ მოგზაურობაზე, რომელიც აერთიანებს ახალ აღმოჩენებს, შთაგონებასა და ადამიანებს, რომლებსაც ერთი ღირებულება აერთიანებთ — მოძრაობა წინ.
+          </p>
+
+          <p data-en="In the evening, surrounded by nature, you will experience the official presentation of a new model, a curated gastronomic setting, music, and a distinctive atmosphere." data-ka="საღამოს, ბუნების გარემოცვაში, გელოდებათ ახალი ავტომობილის პრეზენტაცია, გამორჩეული გასტრონომიული გამოცდილება, მუსიკა და განსაკუთრებული ატმოსფერო.">
+            საღამოს, ბუნების გარემოცვაში, გელოდებათ ახალი ავტომობილის პრეზენტაცია, გამორჩეული გასტრონომიული გამოცდილება, მუსიკა და განსაკუთრებული ატმოსფერო.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- COUNTDOWN -->
+    <section class="countdown-section" id="countdown">
+      <div class="container countdown-wrap reveal">
+      
+
+        <h2 class="countdown-title" data-en="Time Until The Event" data-ka="ღონისძიებამდე დარჩენილია">
+          ღონისძიებამდე დარჩა
+        </h2>
+
+        <div class="countdown-grid" aria-label="Countdown to event">
+          <div class="countdown-item">
+            <span class="countdown-number" id="countDays">00</span>
+            <span class="countdown-label" data-en="Days" data-ka="დღე">დღე</span>
+          </div>
+
+          <div class="countdown-item">
+            <span class="countdown-number" id="countHours">00</span>
+            <span class="countdown-label" data-en="Hours" data-ka="საათი">საათი</span>
+          </div>
+
+          <div class="countdown-item">
+            <span class="countdown-number" id="countMinutes">00</span>
+            <span class="countdown-label" data-en="Minutes" data-ka="წუთი">წუთი</span>
+          </div>
+
+          <div class="countdown-item">
+            <span class="countdown-number" id="countSeconds">00</span>
+            <span class="countdown-label" data-en="Seconds" data-ka="წამი">წამი</span>
+          </div>
+        </div>
+
+    <p class="countdown-note">
+  <strong
+    data-ka="28 ივნისი, 2026 · 15:00"
+    data-en="28 June, 2026 · 15:00"
+  >
+    28 ივნისი, 2026 · 15:00
+  </strong>
+  ·
+  <span
+    data-ka="Jetour Club-ის ექსკლუზიური შეხვედრა"
+    data-en="Exclusive Jetour Club Gathering"
+  >
+    Jetour Club-ის ექსკლუზიური შეხვედრა
+  </span>
+</p>
+      </div>
+    </section>
+
+   <!-- DESIGN -->
+<section class="chapter chapter-presence" id="design">
+  <div class="chapter-bg"></div>
+  <div class="chapter-shade"></div>
+</section>
+
+ <!-- PROGRAM -->
+<section class="event-section program-section" id="program">
+  <div class="event-bg"></div>
+  <div class="event-shade"></div>
+
+  <div class="container event-content reveal">
+
+    <h2 data-en="Event Agenda" data-ka="ღონისძიების აჯენდა">
+      ღონისძიების აჯენდა
+    </h2>
+
+    <div class="timeline-list">
+
+      <!-- 15:00 -->
+      <div class="timeline-item">
+        <span class="timeline-dot"></span>
+        <div class="timeline-time">15:00</div>
+        <div class="timeline-info">
+          <p data-ka="სტუმრების მიღება" data-en="Guest Arrival">
+            სტუმრების მიღება
+          </p>
+          <span>
+            <a href="https://maps.app.goo.gl/TAkqxQ39jpanaRtDA" target="_blank" rel="noopener">
+              E-MOTORS-ის შოურუმი
+            </a>
+          </span>
+        </div>
+      </div>
+
+      <!-- 16:00 -->
+      <div class="timeline-item">
+        <span class="timeline-dot"></span>
+        <div class="timeline-time">16:00</div>
+        <div class="timeline-info">
+          <p data-ka="ავტოკოლონით გამგზავრება" data-en="Convoy Departure">
+            ავტოკოლონით გამგზავრება
+          </p>
+          <span>
+            <a href="https://maps.app.goo.gl/QH7ANJPPDWf9icXG9" target="_blank" rel="noopener">
+              ბეთანიის ᲮᲘᲓᲘ
+            </a>
+          </span>
+        </div>
+      </div>
+
+     
+      <!-- 17:10 -->
+      <div class="timeline-item">
+        <span class="timeline-dot"></span>
+        <div class="timeline-time">17:10</div>
+        <div class="timeline-info">
+          <p data-ka="დრონით გადაღება და სამახსოვრო ფოტოების გადაღება"
+             data-en="Drone Filming and Photo Session">
+            დრონით გადაღება და სამახსოვრო ფოტოების გადაღება
+          </p>
+          <span>
+            <a href="#" target="_blank" rel="noopener">
+              ბეთანიის ᲮᲘᲓᲘ
+            </a>
+          </span>
+        </div>
+      </div>
+
+      <!-- 17:20 -->
+      <div class="timeline-item">
+        <span class="timeline-dot"></span>
+        <div class="timeline-time">17:20</div>
+        <div class="timeline-info">
+          <p data-ka="ავტოკოლონით გამგზავრება" data-en="Convoy Departure">
+            ავტოკოლონით გამგზავრება
+          </p>
+          <span>
+            <a href="https://maps.app.goo.gl/aG4RQJ7e1aSoHLtE9" target="_blank" rel="noopener">
+              ორბეთი · „სათიბე“
+            </a>
+          </span>
+        </div>
+      </div>
+
+      <!-- 17:40 -->
+      <div class="timeline-item">
+        <span class="timeline-dot"></span>
+        <div class="timeline-time">17:40</div>
+        <div class="timeline-info">
+          <p data-ka="სტუმრების მიღება და Welcome Drink"
+             data-en="Guest Arrival & Welcome Drink">
+            სტუმრების მიღება და Welcome Drink
+          </p>
+          <span>
+            <a href="https://maps.app.goo.gl/aG4RQJ7e1aSoHLtE9" target="_blank" rel="noopener">
+              ორბეთი · „სათიბე“
+            </a>
+          </span>
+        </div>
+      </div>
+
+      <!-- 18:00 -->
+      <div class="timeline-item">
+        <span class="timeline-dot"></span>
+        <div class="timeline-time">18:00</div>
+        <div class="timeline-info">
+          <p data-ka="Jetour-ის ახალი მოდელის ოფიციალური პრეზენტაცია"
+             data-en="Official Presentation of the New Jetour Model">
+            Jetour-ის ახალი მოდელის ოფიციალური პრეზენტაცია
+          </p>
+          <span>
+            <a href="https://maps.app.goo.gl/aG4RQJ7e1aSoHLtE9" target="_blank" rel="noopener">
+              ორბეთი · „სათიბე“
+            </a>
+          </span>
+        </div>
+      </div>
+
+      
+
+      <!-- 18:40 -->
+      <div class="timeline-item">
+        <span class="timeline-dot"></span>
+        <div class="timeline-time">18:40</div>
+        <div class="timeline-info">
+          <p data-ka="ვახშამი, მუსიკა და თავისუფალი დრო"
+             data-en="Dinner, Music & Free Time">
+            ვახშამი, მუსიკა და თავისუფალი დრო
+          </p>
+          <span>
+            <a href="https://maps.app.goo.gl/aG4RQJ7e1aSoHLtE9" target="_blank" rel="noopener">
+              ორბეთი · „სათიბე“
+            </a>
+          </span>
+        </div>
+      </div>
+      <!-- 21:00 -->
+      <div class="timeline-item">
+        <span class="timeline-dot"></span>
+        <div class="timeline-time">21:00</div>
+        <div class="timeline-info">
+          <p data-ka="ღონისძიების ოფიციალური დასასრული"
+             data-en="Official Closing of the Event">
+            ღონისძიების ოფიციალური დასასრული
+          </p>
+        </div>
+      </div>
+
+    </div>
+<div class="route-note">
+
+  <p
+    data-ka="მნიშვნელოვანი ინფორმაცია"
+    data-en="Important Information">
+    მნიშვნელოვანი ინფორმაცია
+  </p>
+
+  <ul>
+
+    <li
+      data-ka="ავტოკოლონა გადაადგილდება ორგანიზებულ ფორმატში."
+      data-en="The convoy will travel in an organized convoy.">
+      ავტოკოლონა გადაადგილდება ორგანიზებულ ფორმატში.
+    </li>
+
+    <li
+      data-ka="მარშრუტის განმავლობაში დაგეგმილია სპეციალური გაჩერებები ფოტო და ვიდეო გადაღებისთვის."
+      data-en="Special stops for photo and video opportunities are planned along the route.">
+      მარშრუტის განმავლობაში დაგეგმილია სპეციალური გაჩერებები ფოტო და ვიდეო გადაღებისთვის.
+    </li>
+
+    <li
+      data-ka="გთხოვთ, დაიცვათ ორგანიზატორების მითითებები და თითოეული გაჩერებისთვის განსაზღვრული დრო."
+      data-en="Please follow the organizers' instructions and the scheduled timing for each stop.">
+      გთხოვთ, დაიცვათ ორგანიზატორების მითითებები და თითოეული გაჩერებისთვის განსაზღვრული დრო.
+    </li>
+
+    <li
+      data-ka="გადაადგილებისას დაიცავით საგზაო მოძრაობის წესები და უსაფრთხოების სტანდარტები."
+      data-en="Please observe traffic regulations and safety standards throughout the journey.">
+      გადაადგილებისას დაიცავით საგზაო მოძრაობის წესები და უსაფრთხოების სტანდარტები.
+    </li>
+
+  </ul>
+
+</div>
+  </div>
+</section>
+
+ <!-- ROUTE -->
+<section class="split-section route-experience" id="route">
+  <div class="split-visual">
+    <img
+      src="view.jpg"
+      alt="JETOUR Route Experience"
+      class="intelligence-photo"
+    />
+  </div>
+
+  <div class="split-copy reveal">
+
+    
+
+    <h2
+  data-ka="ღონისძიების კონცეფცია"
+  data-en="Event Concept">
+  ღონისძიების კონცეფცია
+</h2>
+    
+
+<div class="dress-note">
+        <p
+          data-ka="თავისუფალი ჩაცმის სტილი"
+          data-en="Dress Code: Adventure Casual">
+          თავისუფალი ჩაცმის სტილი
+        </p>
+
+        <span
+          data-ka="ჩაცმულობა: კომფორტული და აქტიური დასვენებისთვის შესაფერისი"
+          data-en="Comfortable clothing and suitable footwear recommended.">
+          ჩაცმულობა: კომფორტული და აქტიური დასვენებისთვის შესაფერისი
+        </span>
+      </div>
+   
+
+  </div>
+</section>
+
+
+<!-- RSVP -->
+<section class="rsvp" id="rsvp">
+  <div class="rsvp-bg-accent"></div>
+
+  <div class="container narrow reveal">
+
+    <div class="rsvp-start" id="rsvpStart">
+
+      <h2
+        data-en="Will you join the JETOUR CLUB journey?"
+        data-ka="შეუერთდებით JETOUR CLUB-ის მოგზაურობას?">
+        შეუერთდებით JETOUR CLUB-ის მოგზაურობას?
+      </h2>
+
+      <p
+        class="rsvp-subtext"
+        data-en="Please confirm your attendance so we can prepare your place in advance."
+        data-ka="გთხოვთ, დაგვიდასტუროთ დასწრება, რათა თქვენი ადგილი წინასწარ მოვამზადოთ.">
+        გთხოვთ, დაგვიდასტუროთ დასწრება, რათა თქვენი ადგილი წინასწარ მოვამზადოთ.
+      </p>
+
+      <div class="rsvp-choice">
+        <button class="rsvp-accept" id="acceptInvite" type="button">
+          <span data-en="I will attend" data-ka="მოვდივარ">
+            მოვდივარ
+          </span>
+        </button>
+
+        <button class="rsvp-decline" id="declineInvite" type="button">
+          <span data-en="I can't attend" data-ka="ვერ მოვდივარ">
+            ვერ მოვდივარ
+          </span>
+        </button>
+      </div>
+
+    </div>
+
+    <form class="hidden-form" id="rsvpForm">
+
+      <!-- Full Name -->
+      <div class="form-field">
+        <input
+          type="text"
+          required
+          placeholder=" "
+          data-placeholder-en="Full Name"
+          data-placeholder-ka="სახელი და გვარი">
+
+        <label
+          data-en="Full Name"
+          data-ka="სახელი და გვარი">
+          სახელი და გვარი
+        </label>
+      </div>
+
+      <!-- Email -->
+      <div class="form-field">
+        <input
+          type="email"
+          required
+          placeholder=" "
+          data-placeholder-en="Email"
+          data-placeholder-ka="ელ. ფოსტა">
+
+        <label
+          data-en="Email"
+          data-ka="ელ. ფოსტა">
+          ელ. ფოსტა
+        </label>
+      </div>
+
+      <!-- Phone -->
+      <div class="form-field">
+        <input
+          type="tel"
+          placeholder=" "
+          data-placeholder-en="Phone"
+          data-placeholder-ka="ტელეფონი">
+
+        <label
+          data-en="Phone"
+          data-ka="ტელეფონი">
+          ტელეფონი
+        </label>
+      </div>
+
+      <!-- Additional Adult -->
+      <div class="form-field form-field--select">
+        <label
+          data-en="Additional Adult"
+          data-ka="თანმხლები უფროსი">
+          თანმხლები უფროსი
+        </label>
+
+        <select required>
+          <option
+            value=""
+            selected
+            disabled
+            hidden
+            data-en="Select"
+            data-ka="აირჩიეთ">
+            აირჩიეთ
+          </option>
+
+          <option value="0">0</option>
+          <option value="1">+1</option>
+        </select>
+      </div>
+
+      <!-- Children -->
+      <div class="form-field form-field--select">
+        <label
+          data-en="Children Under 12"
+          data-ka="12 წლამდე ბავშვები">
+          12 წლამდე ბავშვები
+        </label>
+
+        <select required>
+          <option
+            value=""
+            selected
+            disabled
+            hidden
+            data-en="Select"
+            data-ka="აირჩიეთ">
+            აირჩიეთ
+          </option>
+
+          <option value="0">0</option>
+          <option value="1">+1</option>
+          <option value="2">+2</option>
+        </select>
+      </div>
+
+      <!-- Message -->
+      <div class="form-field form-field--textarea">
+        <textarea
+          rows="3"
+          placeholder=" "
+          data-placeholder-en="Message (optional)"
+          data-placeholder-ka="შეტყობინება (სურვილისამებრ)"></textarea>
+
+        <label
+          data-en="Message (optional)"
+          data-ka="შეტყობინება (სურვილისამებრ)">
+          შეტყობინება (სურვილისამებრ)
+        </label>
+      </div>
+
+      <button class="submit-btn" type="submit">
+        <span
+          data-en="Confirm Attendance"
+          data-ka="დასწრების დადასტურება">
+          დასწრების დადასტურება
+        </span>
+      </button>
+
+    </form>
+
+    <!-- SUCCESS -->
+    <div class="success" id="successMessage">
+
+     
+      <h3
+        data-en="Thank you!"
+        data-ka="გმადლობთ!">
+        გმადლობთ!
+      </h3>
+
+      <p
+        data-en="Your attendance has been successfully confirmed."
+        data-ka="თქვენი დასწრება წარმატებით დადასტურდა.">
+        თქვენი დასწრება წარმატებით დადასტურდა.
+      </p>
+
+    </div>
+
+    <!-- DECLINE -->
+    <div class="success decline-success" id="declineMessage">
+
+      <h3
+        data-en="Thank you!"
+        data-ka="გმადლობთ!">
+        გმადლობთ!
+      </h3>
+
+      <p
+        data-en="Your response has been received."
+        data-ka="თქვენი პასუხი მიღებულია.">
+        თქვენი პასუხი მიღებულია.
+      </p>
+
+    </div>
+
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <p>
+    Created by
+    <a
+      href="https://www.instagram.com/digitallinvite/"
+      target="_blank"
+      rel="noopener"
+      class="footer-link">
+      Invite
+    </a>
+  </p>
+</footer>
+
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="script.js"></script>
+
+</body>
+</html>
