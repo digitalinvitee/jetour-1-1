@@ -20,12 +20,9 @@ const form = document.getElementById("rsvpForm");
 const successMessage = document.getElementById("successMessage");
 const declineMessage = document.getElementById("declineMessage");
 
-const musicBtn = document.getElementById("musicBtn");
-const musicIcon = document.getElementById("musicIcon");
-
 let introFinished = false;
 let currentLang = "ka";
-let musicPlaying = false;
+let musicStarted = false;
 
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -37,33 +34,23 @@ gsap.set(".hero-after-intro", { opacity: 0 });
 
 /* ─── MUSIC ──────────────────────────────────────────────── */
 function playMusic() {
-  if (!bgMusic) return;
+  if (!bgMusic || musicStarted) return;
 
   bgMusic.volume = 0.45;
 
   bgMusic.play()
     .then(() => {
-      musicPlaying = true;
-      if (musicIcon) musicIcon.textContent = "ON";
+      musicStarted = true;
     })
     .catch((err) => {
-      musicPlaying = false;
-      if (musicIcon) musicIcon.textContent = "SOUND";
       console.log("Music autoplay blocked:", err);
     });
 }
 
-if (musicBtn && bgMusic) {
-  musicBtn.addEventListener("click", () => {
-    if (bgMusic.paused) {
-      playMusic();
-    } else {
-      bgMusic.pause();
-      musicPlaying = false;
-      if (musicIcon) musicIcon.textContent = "SOUND";
-    }
-  });
-}
+/* music starts on first user action */
+window.addEventListener("click", playMusic, { once: true });
+window.addEventListener("touchstart", playMusic, { once: true });
+window.addEventListener("scroll", playMusic, { once: true });
 
 /* ─── LANGUAGE ───────────────────────────────────────────── */
 function setLanguage(lang) {
@@ -264,11 +251,6 @@ function finishIntro() {
   });
 
   startParticles();
-
-  if (musicBtn) {
-    musicBtn.classList.add("visible");
-  }
-
   playMusic();
 }
 
@@ -377,6 +359,8 @@ if (introVideo) {
 
 if (skipIntro) {
   skipIntro.addEventListener("click", () => {
+    playMusic();
+
     if (!introFinished) {
       introTl.progress(1);
       finishIntro();
@@ -525,6 +509,8 @@ function fadeIn(el) {
 
 if (acceptInvite) {
   acceptInvite.addEventListener("click", () => {
+    playMusic();
+
     fadeOut(rsvpStart, () => {
       if (rsvpStart) rsvpStart.style.display = "none";
 
@@ -539,6 +525,8 @@ if (acceptInvite) {
 
 if (declineInvite) {
   declineInvite.addEventListener("click", () => {
+    playMusic();
+
     fadeOut(rsvpStart, () => {
       if (rsvpStart) rsvpStart.style.display = "none";
 
@@ -581,6 +569,7 @@ const addCalBtn = document.getElementById("addCalBtn");
 if (addCalBtn) {
   addCalBtn.addEventListener("click", (e) => {
     e.preventDefault();
+    playMusic();
 
     const title = encodeURIComponent("Jetour Club — Exclusive Journey");
     const details = encodeURIComponent("Jetour Club exclusive gathering: convoy route, new model presentation, gastronomy and music.");

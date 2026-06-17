@@ -255,49 +255,7 @@ p {
   width: auto;
   display: block;
 }
-.music-btn {
-  position: fixed;
-  top: calc(var(--sat) + 82px);
-  right: 44px;
-  z-index: 1600;
 
-  width: auto;
-  height: 34px;
-  padding: 0 14px;
-
-  border: 1px solid rgba(255, 252, 248, 0.18);
-  background: rgba(6, 4, 10, 0.32);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-
-  color: rgba(255, 252, 248, 0.68);
-  font-family: var(--sharp);
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-
-  cursor: pointer;
-  opacity: 0;
-  pointer-events: none;
-  transition: 0.35s var(--ease);
-}
-
-@media (max-width: 768px) {
-  .music-btn {
-    right: 20px; /* Mobile */
-  }
-}
-.music-btn.visible {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.music-btn:hover {
-  color: #fff;
-  border-color: rgba(185, 167, 232, 0.45);
-  background: rgba(185, 167, 232, 0.12);
-}
 /* INTRO */
 
 .intro {
