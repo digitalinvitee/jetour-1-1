@@ -1,6 +1,7 @@
 gsap.registerPlugin(ScrollTrigger);
 
 /* ─── ELEMENTS ───────────────────────────────────────────── */
+const bgMusic = document.getElementById("bgMusic");
 const body = document.body;
 const intro = document.getElementById("intro");
 const mainContent = document.getElementById("mainContent");
@@ -19,19 +20,50 @@ const form = document.getElementById("rsvpForm");
 const successMessage = document.getElementById("successMessage");
 const declineMessage = document.getElementById("declineMessage");
 
-let introFinished = false;
-let currentLang = "ka";
-const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-const bgMusic = document.getElementById("bgMusic");
 const musicBtn = document.getElementById("musicBtn");
 const musicIcon = document.getElementById("musicIcon");
 
+let introFinished = false;
+let currentLang = "ka";
 let musicPlaying = false;
+
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
 /* ─── INIT ───────────────────────────────────────────────── */
 body.classList.add("lock", "ka");
 
 if (mainContent) gsap.set(mainContent, { opacity: 0 });
 gsap.set(".hero-after-intro", { opacity: 0 });
+
+/* ─── MUSIC ──────────────────────────────────────────────── */
+function playMusic() {
+  if (!bgMusic) return;
+
+  bgMusic.volume = 0.45;
+
+  bgMusic.play()
+    .then(() => {
+      musicPlaying = true;
+      if (musicIcon) musicIcon.textContent = "ON";
+    })
+    .catch((err) => {
+      musicPlaying = false;
+      if (musicIcon) musicIcon.textContent = "SOUND";
+      console.log("Music autoplay blocked:", err);
+    });
+}
+
+if (musicBtn && bgMusic) {
+  musicBtn.addEventListener("click", () => {
+    if (bgMusic.paused) {
+      playMusic();
+    } else {
+      bgMusic.pause();
+      musicPlaying = false;
+      if (musicIcon) musicIcon.textContent = "SOUND";
+    }
+  });
+}
 
 /* ─── LANGUAGE ───────────────────────────────────────────── */
 function setLanguage(lang) {
@@ -232,22 +264,14 @@ function finishIntro() {
   });
 
   startParticles();
-}
-if (musicBtn) {
-  musicBtn.classList.add("visible");
+
+  if (musicBtn) {
+    musicBtn.classList.add("visible");
+  }
+
+  playMusic();
 }
 
-if (bgMusic) {
-  bgMusic.volume = 0.45;
-
-  bgMusic.play().then(() => {
-    musicPlaying = true;
-    if (musicIcon) musicIcon.textContent = "ON";
-  }).catch(() => {
-    musicPlaying = false;
-    if (musicIcon) musicIcon.textContent = "SOUND";
-  });
-}
 /* ─── INTRO TIMELINE ─────────────────────────────────────── */
 gsap.set(".intro-line", {
   opacity: 0,
@@ -465,8 +489,6 @@ gsap.utils.toArray(".countdown-item").forEach((item, i) => {
   });
 });
 
-
-
 /* ─── RSVP TRANSITIONS ───────────────────────────────────── */
 function fadeOut(el, cb) {
   if (!el) return;
@@ -650,16 +672,3 @@ window.addEventListener("load", () => {
   setLanguage(currentLang);
   ScrollTrigger.refresh();
 });
-if (musicBtn && bgMusic) {
-  musicBtn.addEventListener("click", () => {
-    if (bgMusic.paused) {
-      bgMusic.play();
-      musicPlaying = true;
-      if (musicIcon) musicIcon.textContent = "Ⅱ";
-    } else {
-      bgMusic.pause();
-      musicPlaying = false;
-      if (musicIcon) musicIcon.textContent = "♪";
-    }
-  });
-}
