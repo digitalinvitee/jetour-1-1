@@ -1,7 +1,10 @@
 gsap.registerPlugin(ScrollTrigger);
 
 /* ─── ELEMENTS ───────────────────────────────────────────── */
+
 const bgMusic = document.getElementById("bgMusic");
+const musicBtn = document.getElementById("musicBtn");
+
 const body = document.body;
 const intro = document.getElementById("intro");
 const mainContent = document.getElementById("mainContent");
@@ -20,40 +23,122 @@ const form = document.getElementById("rsvpForm");
 const successMessage = document.getElementById("successMessage");
 const declineMessage = document.getElementById("declineMessage");
 
+const addCalBtn = document.getElementById("addCalBtn");
+
+const countDays = document.getElementById("countDays");
+const countHours = document.getElementById("countHours");
+const countMinutes = document.getElementById("countMinutes");
+const countSeconds = document.getElementById("countSeconds");
+
+/* ─── STATE ──────────────────────────────────────────────── */
+
 let introFinished = false;
 let currentLang = "ka";
 let musicStarted = false;
 let ticking = false;
+let particles = [];
+let particlesActive = false;
+let resizeTimer;
 
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const isMobile = window.matchMedia("(max-width: 768px)").matches;
 
 /* ─── INIT ───────────────────────────────────────────────── */
+
 body.classList.add("lock", "ka");
 
-if (mainContent) gsap.set(mainContent, { opacity: 0 });
+if (mainContent) {
+  gsap.set(mainContent, { opacity: 0 });
+}
+
 gsap.set(".hero-after-intro", { opacity: 0 });
 
 /* ─── MUSIC ──────────────────────────────────────────────── */
+
+function updateMusicButton() {
+  if (!musicBtn || !bgMusic) return;
+
+  if (bgMusic.paused) {
+    musicBtn.classList.remove("is-playing");
+    musicBtn.setAttribute("aria-label", "Play music");
+  } else {
+    musicBtn.classList.add("is-playing");
+    musicBtn.setAttribute("aria-label", "Pause music");
+  }
+}
+
 function playMusic() {
-  if (!bgMusic || musicStarted) return;
+  if (!bgMusic) return Promise.resolve(false);
 
   bgMusic.volume = 0.45;
 
-  bgMusic.play()
+  return bgMusic.play()
     .then(() => {
       musicStarted = true;
+      updateMusicButton();
+      removeMusicUnlockListeners();
+      return true;
     })
     .catch((err) => {
       console.log("Music autoplay blocked:", err);
+      updateMusicButton();
+      return false;
     });
 }
 
-window.addEventListener("click", playMusic, { once: true });
-window.addEventListener("touchstart", playMusic, { once: true, passive: true });
-window.addEventListener("scroll", playMusic, { once: true, passive: true });
+function pauseMusic() {
+  if (!bgMusic) return;
+
+  bgMusic.pause();
+  updateMusicButton();
+}
+
+function toggleMusic() {
+  if (!bgMusic) return;
+
+  if (bgMusic.paused) {
+    playMusic();
+  } else {
+    pauseMusic();
+  }
+}
+
+/* 
+  მთავარი გამოსწორება:
+  მუსიკა არ ვრთავთ ძალით intro-ს დროს.
+  intro რომ დასრულდება, პირველივე scroll / wheel / touch / click-ზე ჩაირთვება.
+*/
+
+function tryPlayMusicAfterIntro() {
+  if (!introFinished || !bgMusic || musicStarted) return;
+  playMusic();
+}
+
+function addMusicUnlockListeners() {
+  window.addEventListener("click", tryPlayMusicAfterIntro, { passive: true });
+  window.addEventListener("touchstart", tryPlayMusicAfterIntro, { passive: true });
+  window.addEventListener("wheel", tryPlayMusicAfterIntro, { passive: true });
+  window.addEventListener("scroll", tryPlayMusicAfterIntro, { passive: true });
+  window.addEventListener("keydown", tryPlayMusicAfterIntro);
+}
+
+function removeMusicUnlockListeners() {
+  window.removeEventListener("click", tryPlayMusicAfterIntro);
+  window.removeEventListener("touchstart", tryPlayMusicAfterIntro);
+  window.removeEventListener("wheel", tryPlayMusicAfterIntro);
+  window.removeEventListener("scroll", tryPlayMusicAfterIntro);
+  window.removeEventListener("keydown", tryPlayMusicAfterIntro);
+}
+
+if (musicBtn) {
+  musicBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    toggleMusic();
+  });
+}
 
 /* ─── LANGUAGE ───────────────────────────────────────────── */
+
 function setLanguage(lang) {
   currentLang = lang;
   body.classList.toggle("ka", lang === "ka");
@@ -72,16 +157,21 @@ function setLanguage(lang) {
     btn.classList.toggle("active", btn.dataset.lang === lang);
   });
 
-  setTimeout(() => ScrollTrigger.refresh(), 120);
+  setTimeout(() => {
+    ScrollTrigger.refresh();
+  }, 120);
 }
 
 langBtns.forEach((btn) => {
-  btn.addEventListener("click", () => setLanguage(btn.dataset.lang));
+  btn.addEventListener("click", () => {
+    setLanguage(btn.dataset.lang);
+  });
 });
 
 setLanguage("ka");
 
-/* ─── SCROLL STATE OPTIMIZED ─────────────────────────────── */
+/* ─── SCROLL STATE ───────────────────────────────────────── */
+
 function onScrollUpdate() {
   const scrollTop = window.scrollY;
 
@@ -105,11 +195,9 @@ window.addEventListener("scroll", () => {
 }, { passive: true });
 
 /* ─── PARTICLES ──────────────────────────────────────────── */
+
 const canvas = document.getElementById("particles");
 const ctx = canvas ? canvas.getContext("2d") : null;
-
-let particles = [];
-let particlesActive = false;
 
 function resizeCanvas() {
   if (!canvas) return;
@@ -121,7 +209,9 @@ function resizeCanvas() {
   canvas.style.width = `${window.innerWidth}px`;
   canvas.style.height = `${window.innerHeight}px`;
 
-  if (ctx) ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  if (ctx) {
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
 }
 
 function initParticles() {
@@ -184,7 +274,6 @@ function startParticles() {
 resizeCanvas();
 initParticles();
 
-let resizeTimer;
 window.addEventListener("resize", () => {
   clearTimeout(resizeTimer);
 
@@ -196,13 +285,16 @@ window.addEventListener("resize", () => {
 });
 
 /* ─── FINISH INTRO ───────────────────────────────────────── */
+
 function finishIntro() {
   if (introFinished) return;
 
   introFinished = true;
   body.classList.remove("lock");
 
-  if (introVideo) introVideo.pause();
+  if (introVideo) {
+    introVideo.pause();
+  }
 
   if (intro) {
     gsap.to(intro, {
@@ -270,10 +362,13 @@ function finishIntro() {
   });
 
   startParticles();
-  playMusic();
+
+  /* აქ აღარ ვრთავთ პირდაპირ playMusic(); */
+  addMusicUnlockListeners();
 }
 
 /* ─── INTRO TIMELINE ─────────────────────────────────────── */
+
 gsap.set(".intro-line", {
   opacity: 0,
   y: 48,
@@ -378,16 +473,17 @@ if (introVideo) {
 
 if (skipIntro) {
   skipIntro.addEventListener("click", () => {
-    playMusic();
-
     if (!introFinished) {
       introTl.progress(1);
       finishIntro();
     }
+
+    playMusic();
   });
 }
 
-/* ─── SCROLL REVEALS — SMOOTHER VERSION ─────────────────── */
+/* ─── SCROLL REVEALS ─────────────────────────────────────── */
+
 gsap.utils.toArray(".reveal").forEach((el) => {
   gsap.from(el, {
     scrollTrigger: {
@@ -402,7 +498,8 @@ gsap.utils.toArray(".reveal").forEach((el) => {
   });
 });
 
-/* ─── PARALLAX BACKGROUNDS — SAME EFFECT, LIGHTER ───────── */
+/* ─── PARALLAX BACKGROUNDS ───────────────────────────────── */
+
 gsap.utils.toArray(".hero-bg, .chapter-bg, .event-bg").forEach((bg) => {
   gsap.to(bg, {
     yPercent: isMobile ? 2 : 3,
@@ -417,6 +514,7 @@ gsap.utils.toArray(".hero-bg, .chapter-bg, .event-bg").forEach((bg) => {
 });
 
 /* ─── HEADINGS ───────────────────────────────────────────── */
+
 gsap.utils.toArray(".chapter-content h2, .split-copy h2, .event-content h2, .rsvp h2, .countdown-title").forEach((title) => {
   gsap.from(title, {
     scrollTrigger: {
@@ -432,6 +530,7 @@ gsap.utils.toArray(".chapter-content h2, .split-copy h2, .event-content h2, .rsv
 });
 
 /* ─── SPLIT VISUAL ───────────────────────────────────────── */
+
 if (document.querySelector(".split-visual")) {
   gsap.from(".split-visual", {
     scrollTrigger: {
@@ -448,6 +547,7 @@ if (document.querySelector(".split-visual")) {
 }
 
 /* ─── ROUTE ITEMS ────────────────────────────────────────── */
+
 gsap.utils.toArray(".route-step").forEach((item, i) => {
   gsap.from(item, {
     scrollTrigger: {
@@ -464,6 +564,7 @@ gsap.utils.toArray(".route-step").forEach((item, i) => {
 });
 
 /* ─── EVENT TIMELINE ITEMS ───────────────────────────────── */
+
 gsap.utils.toArray(".timeline-item").forEach((row, i) => {
   gsap.from(row, {
     scrollTrigger: {
@@ -480,6 +581,7 @@ gsap.utils.toArray(".timeline-item").forEach((row, i) => {
 });
 
 /* ─── COUNTDOWN ANIMATION ────────────────────────────────── */
+
 gsap.utils.toArray(".countdown-item").forEach((item, i) => {
   gsap.from(item, {
     scrollTrigger: {
@@ -496,6 +598,7 @@ gsap.utils.toArray(".countdown-item").forEach((item, i) => {
 });
 
 /* ─── RSVP TRANSITIONS ───────────────────────────────────── */
+
 function fadeOut(el, cb) {
   if (!el) return;
 
@@ -586,11 +689,11 @@ if (form) {
 }
 
 /* ─── ADD TO CALENDAR ────────────────────────────────────── */
-const addCalBtn = document.getElementById("addCalBtn");
 
 if (addCalBtn) {
   addCalBtn.addEventListener("click", (e) => {
     e.preventDefault();
+
     playMusic();
 
     const title = encodeURIComponent("Jetour Club — Exclusive Journey");
@@ -607,52 +710,51 @@ if (addCalBtn) {
 }
 
 /* ─── BUTTON MICRO-INTERACTIONS ──────────────────────────── */
-document.querySelectorAll(".primary-btn, .secondary-btn, .cta-btn, .rsvp-accept, .rsvp-decline, .submit-btn").forEach((btn) => {
-  btn.addEventListener("mouseenter", () => {
-    gsap.to(btn, {
-      y: -2,
-      duration: 0.2,
-      ease: "power2.out",
-      overwrite: true
+
+document
+  .querySelectorAll(".primary-btn, .secondary-btn, .cta-btn, .rsvp-accept, .rsvp-decline, .submit-btn")
+  .forEach((btn) => {
+    btn.addEventListener("mouseenter", () => {
+      gsap.to(btn, {
+        y: -2,
+        duration: 0.2,
+        ease: "power2.out",
+        overwrite: true
+      });
     });
+
+    btn.addEventListener("mouseleave", () => {
+      gsap.to(btn, {
+        y: 0,
+        duration: 0.2,
+        ease: "power2.out",
+        overwrite: true
+      });
+    });
+
+    btn.addEventListener("touchstart", () => {
+      gsap.to(btn, {
+        scale: 0.98,
+        duration: 0.12,
+        ease: "power2.out",
+        overwrite: true
+      });
+    }, { passive: true });
+
+    btn.addEventListener("touchend", () => {
+      gsap.to(btn, {
+        scale: 1,
+        duration: 0.2,
+        ease: "power2.out",
+        overwrite: true
+      });
+    }, { passive: true });
   });
-
-  btn.addEventListener("mouseleave", () => {
-    gsap.to(btn, {
-      y: 0,
-      duration: 0.2,
-      ease: "power2.out",
-      overwrite: true
-    });
-  });
-
-  btn.addEventListener("touchstart", () => {
-    gsap.to(btn, {
-      scale: 0.98,
-      duration: 0.12,
-      ease: "power2.out",
-      overwrite: true
-    });
-  }, { passive: true });
-
-  btn.addEventListener("touchend", () => {
-    gsap.to(btn, {
-      scale: 1,
-      duration: 0.2,
-      ease: "power2.out",
-      overwrite: true
-    });
-  }, { passive: true });
-});
 
 /* ─── COUNTDOWN ──────────────────────────────────────────── */
-const countDays = document.getElementById("countDays");
-const countHours = document.getElementById("countHours");
-const countMinutes = document.getElementById("countMinutes");
-const countSeconds = document.getElementById("countSeconds");
 
 if (countDays && countHours && countMinutes && countSeconds) {
-  const eventDate = new Date("2026-06-28T15:00:00+04:00").getTime();
+  const eventDate = new Date("2026-06-28T16:00:00+04:00").getTime();
 
   function updateCountdown() {
     const now = Date.now();
@@ -682,9 +784,11 @@ if (countDays && countHours && countMinutes && countSeconds) {
 }
 
 /* ─── FINAL INIT ─────────────────────────────────────────── */
+
 window.addEventListener("load", () => {
   onScrollUpdate();
   setLanguage(currentLang);
+  updateMusicButton();
 
   setTimeout(() => {
     ScrollTrigger.refresh();
