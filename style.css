@@ -849,7 +849,7 @@ p {
 .event-content h2 {
   max-width: 760px;
   color: var(--text);
-  font-family: var(--tech);
+  font-family: var(--sans);
   font-size: clamp(38px, 5.4vw, 74px);
   font-weight: 600;
   letter-spacing: -0.025em;
@@ -1066,6 +1066,7 @@ p {
 /* ==========================================================
    ROUTE
    ========================================================== */
+/* ROUTE */
 
 .route-experience {
   min-height: 100svh;
@@ -1094,12 +1095,64 @@ p {
 }
 
 .split-copy h2 {
-  margin-bottom: 18px;
+  margin-bottom: 28px;
+  font-family: var(--sans);
+  font-weight: 600;
 }
 
-.split-copy > p {
-  max-width: 470px;
-  margin-bottom: 42px;
+/* DRESS CODE */
+
+.dress-note {
+  max-width: 540px;
+  padding-top: 28px;
+  border-top: 1px solid rgba(26, 22, 32, 0.12);
+}
+
+.dress-note p {
+  margin-bottom: 14px;
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.dress-note span {
+  display: block;
+  max-width: 460px;
+  color: rgba(26, 22, 32, 0.72);
+  font-family: var(--sans);
+  font-size: 17px;
+  font-weight: 500;
+  line-height: 1.75;
+}
+
+/* RECOMMENDATION */
+
+.recommendation {
+  max-width: 540px;
+  margin-top: 34px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(26, 22, 32, 0.10);
+}
+
+.recommendation strong {
+  display: block;
+  margin-bottom: 12px;
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.recommendation p {
+  max-width: 500px;
+  color: rgba(26, 22, 32, 0.68);
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.85;
 }
 
 /* TIMELINE */
@@ -1654,10 +1707,10 @@ p {
   }
 
   .hero-meta-item {
-    width: 100%;
-    display: grid;
-    grid-template-columns: 64px 1fr;
-    gap: 14px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 6px;
   }
 
   .cta-btn {

@@ -23,8 +23,10 @@ const declineMessage = document.getElementById("declineMessage");
 let introFinished = false;
 let currentLang = "ka";
 let musicStarted = false;
+let ticking = false;
 
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const isMobile = window.matchMedia("(max-width: 768px)").matches;
 
 /* ─── INIT ───────────────────────────────────────────────── */
 body.classList.add("lock", "ka");
@@ -47,10 +49,9 @@ function playMusic() {
     });
 }
 
-/* music starts on first user action */
 window.addEventListener("click", playMusic, { once: true });
-window.addEventListener("touchstart", playMusic, { once: true });
-window.addEventListener("scroll", playMusic, { once: true });
+window.addEventListener("touchstart", playMusic, { once: true, passive: true });
+window.addEventListener("scroll", playMusic, { once: true, passive: true });
 
 /* ─── LANGUAGE ───────────────────────────────────────────── */
 function setLanguage(lang) {
@@ -71,7 +72,7 @@ function setLanguage(lang) {
     btn.classList.toggle("active", btn.dataset.lang === lang);
   });
 
-  ScrollTrigger.refresh();
+  setTimeout(() => ScrollTrigger.refresh(), 120);
 }
 
 langBtns.forEach((btn) => {
@@ -80,22 +81,27 @@ langBtns.forEach((btn) => {
 
 setLanguage("ka");
 
-/* ─── PROGRESS BAR ───────────────────────────────────────── */
-function updateProgress() {
-  if (!progressBar) return;
-
+/* ─── SCROLL STATE OPTIMIZED ─────────────────────────────── */
+function onScrollUpdate() {
   const scrollTop = window.scrollY;
-  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
 
-  progressBar.style.width = docHeight > 0 ? `${(scrollTop / docHeight) * 100}%` : "0%";
+  if (progressBar) {
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    progressBar.style.width = docHeight > 0 ? `${(scrollTop / docHeight) * 100}%` : "0%";
+  }
+
+  if (navBar) {
+    navBar.classList.toggle("scrolled", scrollTop > 60);
+  }
+
+  ticking = false;
 }
 
-window.addEventListener("scroll", updateProgress, { passive: true });
-
-/* ─── NAV SCROLL STATE ───────────────────────────────────── */
 window.addEventListener("scroll", () => {
-  if (!navBar) return;
-  navBar.classList.toggle("scrolled", window.scrollY > 60);
+  if (!ticking) {
+    requestAnimationFrame(onScrollUpdate);
+    ticking = true;
+  }
 }, { passive: true });
 
 /* ─── PARTICLES ──────────────────────────────────────────── */
@@ -108,24 +114,33 @@ let particlesActive = false;
 function resizeCanvas() {
   if (!canvas) return;
 
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+  const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+
+  canvas.width = window.innerWidth * dpr;
+  canvas.height = window.innerHeight * dpr;
+  canvas.style.width = `${window.innerWidth}px`;
+  canvas.style.height = `${window.innerHeight}px`;
+
+  if (ctx) ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 }
 
 function initParticles() {
   if (!canvas) return;
 
   particles = [];
-  const count = Math.min(Math.floor(window.innerWidth / 18), 55);
+
+  const count = isMobile
+    ? Math.min(Math.floor(window.innerWidth / 28), 24)
+    : Math.min(Math.floor(window.innerWidth / 24), 42);
 
   for (let i = 0; i < count; i++) {
     particles.push({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height,
-      r: Math.random() * 0.9 + 0.2,
-      dx: (Math.random() - 0.5) * 0.14,
-      dy: (Math.random() - 0.5) * 0.14,
-      alpha: Math.random() * 0.32 + 0.06
+      x: Math.random() * window.innerWidth,
+      y: Math.random() * window.innerHeight,
+      r: Math.random() * 0.8 + 0.2,
+      dx: (Math.random() - 0.5) * 0.10,
+      dy: (Math.random() - 0.5) * 0.10,
+      alpha: Math.random() * 0.24 + 0.04
     });
   }
 }
@@ -133,7 +148,7 @@ function initParticles() {
 function animateParticles() {
   if (!particlesActive || !ctx || !canvas) return;
 
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
 
   particles.forEach((p) => {
     ctx.beginPath();
@@ -144,17 +159,17 @@ function animateParticles() {
     p.x += p.dx;
     p.y += p.dy;
 
-    if (p.x < 0) p.x = canvas.width;
-    if (p.x > canvas.width) p.x = 0;
-    if (p.y < 0) p.y = canvas.height;
-    if (p.y > canvas.height) p.y = 0;
+    if (p.x < 0) p.x = window.innerWidth;
+    if (p.x > window.innerWidth) p.x = 0;
+    if (p.y < 0) p.y = window.innerHeight;
+    if (p.y > window.innerHeight) p.y = 0;
   });
 
   requestAnimationFrame(animateParticles);
 }
 
 function startParticles() {
-  if (!canvas || particlesActive) return;
+  if (!canvas || particlesActive || reduceMotion) return;
 
   particlesActive = true;
   canvas.style.opacity = "0";
@@ -162,17 +177,22 @@ function startParticles() {
   requestAnimationFrame(animateParticles);
 
   setTimeout(() => {
-    canvas.style.opacity = "0.18";
+    canvas.style.opacity = isMobile ? "0.07" : "0.11";
   }, 100);
 }
 
 resizeCanvas();
 initParticles();
 
+let resizeTimer;
 window.addEventListener("resize", () => {
-  resizeCanvas();
-  initParticles();
-  ScrollTrigger.refresh();
+  clearTimeout(resizeTimer);
+
+  resizeTimer = setTimeout(() => {
+    resizeCanvas();
+    initParticles();
+    ScrollTrigger.refresh();
+  }, 180);
 });
 
 /* ─── FINISH INTRO ───────────────────────────────────────── */
@@ -187,7 +207,7 @@ function finishIntro() {
   if (intro) {
     gsap.to(intro, {
       opacity: 0,
-      duration: reduceMotion ? 0.1 : 1.1,
+      duration: reduceMotion ? 0.1 : 1.05,
       ease: "power3.inOut",
       onComplete: () => {
         intro.style.display = "none";
@@ -199,54 +219,53 @@ function finishIntro() {
   if (mainContent) {
     gsap.to(mainContent, {
       opacity: 1,
-      duration: reduceMotion ? 0.1 : 1.0,
+      duration: reduceMotion ? 0.1 : 0.9,
       ease: "power3.out"
     });
   }
 
   gsap.to(".hero-after-intro", {
     opacity: 1,
-    duration: reduceMotion ? 0.1 : 1.3,
+    duration: reduceMotion ? 0.1 : 1.15,
     ease: "power3.out"
   });
 
   gsap.from(".hero-eyebrow", {
     opacity: 0,
-    y: 20,
-    duration: reduceMotion ? 0.1 : 0.9,
-    delay: reduceMotion ? 0 : 0.3,
+    y: 18,
+    duration: reduceMotion ? 0.1 : 0.75,
+    delay: reduceMotion ? 0 : 0.25,
     ease: "power4.out"
   });
 
   gsap.from(".hero-headline", {
     opacity: 0,
-    y: 52,
-    filter: "blur(6px)",
-    duration: reduceMotion ? 0.1 : 1.1,
-    delay: reduceMotion ? 0 : 0.44,
+    y: 42,
+    duration: reduceMotion ? 0.1 : 0.95,
+    delay: reduceMotion ? 0 : 0.38,
     ease: "power4.out"
   });
 
   gsap.from(".hero-meta", {
     opacity: 0,
-    y: 28,
-    duration: reduceMotion ? 0.1 : 0.9,
-    delay: reduceMotion ? 0 : 0.62,
+    y: 24,
+    duration: reduceMotion ? 0.1 : 0.8,
+    delay: reduceMotion ? 0 : 0.55,
     ease: "power4.out"
   });
 
   gsap.from(".cta-btn", {
     opacity: 0,
-    y: 20,
-    duration: reduceMotion ? 0.1 : 0.8,
-    delay: reduceMotion ? 0 : 0.78,
+    y: 18,
+    duration: reduceMotion ? 0.1 : 0.7,
+    delay: reduceMotion ? 0 : 0.72,
     ease: "power4.out"
   });
 
   gsap.from(".scroll-hint", {
     opacity: 0,
-    duration: reduceMotion ? 0.1 : 0.6,
-    delay: reduceMotion ? 0 : 1.1,
+    duration: reduceMotion ? 0.1 : 0.55,
+    delay: reduceMotion ? 0 : 0.95,
     ease: "power3.out"
   });
 
@@ -368,31 +387,31 @@ if (skipIntro) {
   });
 }
 
-/* ─── SCROLL REVEALS ─────────────────────────────────────── */
+/* ─── SCROLL REVEALS — SMOOTHER VERSION ─────────────────── */
 gsap.utils.toArray(".reveal").forEach((el) => {
   gsap.from(el, {
     scrollTrigger: {
       trigger: el,
-      start: "top 86%"
+      start: "top 88%",
+      once: true
     },
     opacity: 0,
-    y: 52,
-    filter: "blur(7px)",
-    duration: reduceMotion ? 0.1 : 1.0,
+    y: 36,
+    duration: reduceMotion ? 0.1 : 0.82,
     ease: "power4.out"
   });
 });
 
-/* ─── PARALLAX BACKGROUNDS ───────────────────────────────── */
+/* ─── PARALLAX BACKGROUNDS — SAME EFFECT, LIGHTER ───────── */
 gsap.utils.toArray(".hero-bg, .chapter-bg, .event-bg").forEach((bg) => {
   gsap.to(bg, {
-    yPercent: 4,
+    yPercent: isMobile ? 2 : 3,
     ease: "none",
     scrollTrigger: {
       trigger: bg.parentElement,
       start: "top bottom",
       end: "bottom top",
-      scrub: reduceMotion ? false : 1.4
+      scrub: reduceMotion ? false : 0.75
     }
   });
 });
@@ -402,12 +421,12 @@ gsap.utils.toArray(".chapter-content h2, .split-copy h2, .event-content h2, .rsv
   gsap.from(title, {
     scrollTrigger: {
       trigger: title,
-      start: "top 88%"
+      start: "top 88%",
+      once: true
     },
     opacity: 0,
-    y: 40,
-    filter: "blur(6px)",
-    duration: reduceMotion ? 0.1 : 0.92,
+    y: 32,
+    duration: reduceMotion ? 0.1 : 0.78,
     ease: "power4.out"
   });
 });
@@ -417,12 +436,13 @@ if (document.querySelector(".split-visual")) {
   gsap.from(".split-visual", {
     scrollTrigger: {
       trigger: ".route-experience",
-      start: "top 78%"
+      start: "top 78%",
+      once: true
     },
     opacity: 0,
-    scale: 1.025,
-    filter: "brightness(.84)",
-    duration: reduceMotion ? 0.1 : 1.3,
+    scale: 1.018,
+    filter: "brightness(.9)",
+    duration: reduceMotion ? 0.1 : 1.05,
     ease: "power4.out"
   });
 }
@@ -432,12 +452,13 @@ gsap.utils.toArray(".route-step").forEach((item, i) => {
   gsap.from(item, {
     scrollTrigger: {
       trigger: item,
-      start: "top 91%"
+      start: "top 91%",
+      once: true
     },
     opacity: 0,
-    x: 28,
-    duration: reduceMotion ? 0.1 : 0.7,
-    delay: reduceMotion ? 0 : i * 0.07,
+    x: 22,
+    duration: reduceMotion ? 0.1 : 0.62,
+    delay: reduceMotion ? 0 : Math.min(i * 0.05, 0.25),
     ease: "power4.out"
   });
 });
@@ -447,12 +468,13 @@ gsap.utils.toArray(".timeline-item").forEach((row, i) => {
   gsap.from(row, {
     scrollTrigger: {
       trigger: row,
-      start: "top 92%"
+      start: "top 92%",
+      once: true
     },
     opacity: 0,
-    y: 24,
-    duration: reduceMotion ? 0.1 : 0.7,
-    delay: reduceMotion ? 0 : Math.min(i * 0.04, 0.32),
+    y: 22,
+    duration: reduceMotion ? 0.1 : 0.62,
+    delay: reduceMotion ? 0 : Math.min(i * 0.035, 0.24),
     ease: "power4.out"
   });
 });
@@ -462,13 +484,13 @@ gsap.utils.toArray(".countdown-item").forEach((item, i) => {
   gsap.from(item, {
     scrollTrigger: {
       trigger: item,
-      start: "top 92%"
+      start: "top 92%",
+      once: true
     },
     opacity: 0,
-    y: 26,
-    filter: "blur(5px)",
-    duration: reduceMotion ? 0.1 : 0.72,
-    delay: reduceMotion ? 0 : i * 0.08,
+    y: 24,
+    duration: reduceMotion ? 0.1 : 0.66,
+    delay: reduceMotion ? 0 : i * 0.07,
     ease: "power4.out"
   });
 });
@@ -479,9 +501,9 @@ function fadeOut(el, cb) {
 
   gsap.to(el, {
     opacity: 0,
-    y: -20,
-    filter: "blur(7px)",
-    duration: reduceMotion ? 0.1 : 0.52,
+    y: -18,
+    filter: "blur(5px)",
+    duration: reduceMotion ? 0.1 : 0.48,
     ease: "power3.inOut",
     onComplete: cb
   });
@@ -494,14 +516,14 @@ function fadeIn(el) {
     el,
     {
       opacity: 0,
-      y: 28,
-      filter: "blur(7px)"
+      y: 24,
+      filter: "blur(5px)"
     },
     {
       opacity: 1,
       y: 0,
       filter: "blur(0px)",
-      duration: reduceMotion ? 0.1 : 0.8,
+      duration: reduceMotion ? 0.1 : 0.72,
       ease: "power4.out"
     }
   );
@@ -589,32 +611,36 @@ document.querySelectorAll(".primary-btn, .secondary-btn, .cta-btn, .rsvp-accept,
   btn.addEventListener("mouseenter", () => {
     gsap.to(btn, {
       y: -2,
-      duration: 0.22,
-      ease: "power2.out"
+      duration: 0.2,
+      ease: "power2.out",
+      overwrite: true
     });
   });
 
   btn.addEventListener("mouseleave", () => {
     gsap.to(btn, {
       y: 0,
-      duration: 0.22,
-      ease: "power2.out"
+      duration: 0.2,
+      ease: "power2.out",
+      overwrite: true
     });
   });
 
   btn.addEventListener("touchstart", () => {
     gsap.to(btn, {
-      scale: 0.97,
-      duration: 0.14,
-      ease: "power2.out"
+      scale: 0.98,
+      duration: 0.12,
+      ease: "power2.out",
+      overwrite: true
     });
   }, { passive: true });
 
   btn.addEventListener("touchend", () => {
     gsap.to(btn, {
       scale: 1,
-      duration: 0.22,
-      ease: "power2.out"
+      duration: 0.2,
+      ease: "power2.out",
+      overwrite: true
     });
   }, { passive: true });
 });
@@ -657,7 +683,10 @@ if (countDays && countHours && countMinutes && countSeconds) {
 
 /* ─── FINAL INIT ─────────────────────────────────────────── */
 window.addEventListener("load", () => {
-  updateProgress();
+  onScrollUpdate();
   setLanguage(currentLang);
-  ScrollTrigger.refresh();
+
+  setTimeout(() => {
+    ScrollTrigger.refresh();
+  }, 250);
 });
