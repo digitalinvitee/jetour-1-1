@@ -15,9 +15,8 @@
   --text: #1a1620;
   --muted: rgba(26, 22, 32, 0.58);
   --faint: rgba(26, 22, 32, 0.32);
-  --line: rgba(26, 22, 32, 0.1);
-  --line-med: rgba(26, 22, 32, 0.16);
-
+--line: rgba(217, 138, 58, 0.5);
+--line-med: rgba(217, 138, 58, 0.7);;
   --violet: #f2b870;
   --violet-dk: #e8a04c;
   --violet-mid: #db8a33;
@@ -785,12 +784,7 @@ p {
   top: 10px;
   bottom: 20px;
   width: 1px;
-  background: linear-gradient(
-    to bottom,
-    rgba(26, 22, 32, 0.12),
-    rgba(26, 22, 32, 0.34),
-    rgba(26, 22, 32, 0.10)
-  );
+  background: #D98A3A;
 }
 
 .timeline-item {
@@ -980,7 +974,8 @@ p {
   max-width: 560px;
   margin: 22px 0 0;
   padding: 24px 0 0;
-  border-top: 1px solid rgba(26, 22, 32, 0.14);
+  border-top: 1px solid rgba(217, 138, 58, 0.5);
+
 }
 
 .dress-note span {
@@ -1014,7 +1009,7 @@ p {
 .recommendation {
   max-width: 560px;
   padding-top: 24px;
-  border-top: 1px solid rgba(26, 22, 32, 0.10);
+  border-top: 1px solid rgba(217, 138, 58, 0.5);
 }
 
 .recommendation strong {
