@@ -23,7 +23,6 @@ const form = document.getElementById("rsvpForm");
 const successMessage = document.getElementById("successMessage");
 const declineMessage = document.getElementById("declineMessage");
 
-const addCalBtn = document.getElementById("addCalBtn");
 
 const countDays = document.getElementById("countDays");
 const countHours = document.getElementById("countHours");
@@ -688,26 +687,7 @@ if (form) {
   });
 }
 
-/* ─── ADD TO CALENDAR ────────────────────────────────────── */
 
-if (addCalBtn) {
-  addCalBtn.addEventListener("click", (e) => {
-    e.preventDefault();
-
-    playMusic();
-
-    const title = encodeURIComponent("Jetour Club — Exclusive Journey");
-    const details = encodeURIComponent("Jetour Club exclusive gathering: convoy route, new model presentation, gastronomy and music.");
-    const start = "20260628T150000";
-    const end = "20260628T210000";
-    const loc = encodeURIComponent("E-MOTORS Showroom, Akaki Beliashvili St. #131, Tbilisi");
-
-    window.open(
-      `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${start}/${end}&details=${details}&location=${loc}`,
-      "_blank"
-    );
-  });
-}
 
 /* ─── BUTTON MICRO-INTERACTIONS ──────────────────────────── */
 
