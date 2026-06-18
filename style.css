@@ -1360,14 +1360,16 @@ p {
     height: 34px;
   }
 
-  .music-btn {
-    width: 42px;
-    height: 42px;
-    right: 16px;
-    top: auto;
-    bottom: 16px;
-    font-size: 17px;
-  }
+ .music-btn {
+  width: 44px;
+  height: 44px;
+  right: 24px;
+
+  top: 72px;
+  bottom: auto;
+
+  font-size: 18px;
+}
 
   .hero {
     min-height: 100svh;
