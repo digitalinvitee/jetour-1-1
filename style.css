@@ -15,15 +15,23 @@
   --text: #1a1620;
   --muted: rgba(26, 22, 32, 0.58);
   --faint: rgba(26, 22, 32, 0.32);
---line: rgba(217, 138, 58, 0.5);
---line-med: rgba(217, 138, 58, 0.7);;
-  --violet: #f2b870;
-  --violet-dk: #e8a04c;
-  --violet-mid: #db8a33;
-  --violet-dp: #ca7420;
+
+  /* JETOUR carrot accent */
+  --accent: #D06F3C;
+  --accent-soft: #E09A67;
+  --accent-light: #F1C29C;
+  --accent-dark: #A94F25;
+  --line: rgba(208, 111, 60, 0.42);
+  --line-med: rgba(208, 111, 60, 0.64);
+
+  /* old variable names kept for compatibility */
+  --violet: var(--accent-light);
+  --violet-dk: var(--accent-soft);
+  --violet-mid: var(--accent);
+  --violet-dp: var(--accent-dark);
+  --gold: var(--accent);
 
   --white: #fffcf8;
-  --gold: #c9b47a;
 
   --serif: "Cormorant Garamond", Georgia, serif;
   --sans: "FiraGO", "Noto Sans Georgian", Arial, sans-serif;
@@ -35,6 +43,7 @@
   --sat: env(safe-area-inset-top, 0px);
   --sab: env(safe-area-inset-bottom, 0px);
 }
+
 
 body:not(.ka) {
   --sans: "JetourEN", "DM Sans", Arial, sans-serif;
@@ -223,7 +232,8 @@ p {
 .music-btn {
   position: fixed;
   right: 24px;
-  bottom: 24px;
+  top: 72px;
+  bottom: auto;
   z-index: 1600;
   width: 44px;
   height: 44px;
@@ -269,7 +279,7 @@ p {
   inset: 0;
   z-index: 2;
   background:
-    radial-gradient(ellipse at 15% 80%, rgba(242, 184, 112, 0.14), transparent 40%),
+    radial-gradient(ellipse at 15% 80%, rgba(208, 111, 60, 0.14), transparent 40%),
     linear-gradient(to right, rgba(0, 0, 0, 0.80), rgba(0, 0, 0, 0.38) 50%, rgba(0, 0, 0, 0.08)),
     linear-gradient(to top, rgba(0, 0, 0, 0.76), rgba(0, 0, 0, 0.18) 54%, rgba(0, 0, 0, 0.04));
 }
@@ -359,7 +369,7 @@ p {
   width: 0;
   height: 1px;
   margin: 22px 0 18px;
-  background: linear-gradient(90deg, transparent, rgba(201, 180, 122, 0.95), transparent);
+  background: linear-gradient(90deg, transparent, rgba(208, 111, 60, 0.95), transparent);
   opacity: 0;
 }
 
@@ -380,17 +390,18 @@ p {
 .skip-intro {
   position: absolute;
   right: 24px;
-  top: 72px; /* დაარეგულირე 68-90px დიაპაზონში */
+  bottom: 24px;
+  top: auto;
 
   z-index: 10;
   display: flex;
   align-items: center;
   gap: 8px;
   padding: 12px 18px;
-  border: 0px solid rgba(255, 252, 248, 0.22);
-  background: rgba(255, 252, 248, 0.07);
 
+  background: rgba(255, 252, 248, 0.07);
   color: rgba(255, 252, 248, 0.68);
+
   font-size: 7px;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -399,9 +410,9 @@ p {
 }
 
 .skip-intro:hover {
-  border-color: rgba(242, 184, 112, 0.52);
+  border-color: rgba(208, 111, 60, 0.52);
   color: var(--white);
-  background: rgba(242, 184, 112, 0.14);
+  background: rgba(208, 111, 60, 0.14);
 }
 
 /* HERO */
@@ -558,8 +569,8 @@ p {
 .invitation {
   padding: clamp(72px, 12vh, 136px) 0;
   background:
-    radial-gradient(ellipse at 78% 12%, rgba(242, 184, 112, 0.10), transparent 40%),
-    radial-gradient(ellipse at 16% 88%, rgba(202, 116, 32, 0.07), transparent 36%),
+    radial-gradient(ellipse at 78% 12%, rgba(208, 111, 60, 0.10), transparent 40%),
+    radial-gradient(ellipse at 16% 88%, rgba(208, 111, 60, 0.07), transparent 36%),
     var(--cream-warm);
 }
 
@@ -599,7 +610,7 @@ p {
   overflow: hidden;
   padding: clamp(86px, 12vh, 150px) 0 clamp(92px, 13vh, 160px);
   background:
-    radial-gradient(ellipse at 50% -12%, rgba(242, 184, 112, 0.12), transparent 44%),
+    radial-gradient(ellipse at 50% -12%, rgba(208, 111, 60, 0.12), transparent 44%),
     linear-gradient(180deg, var(--cream-warm) 0%, var(--cream) 58%, var(--cream-deep) 100%);
   isolation: isolate;
 }
@@ -650,7 +661,7 @@ p {
     180deg,
     #111111 0%,
     #2b1a10 55%,
-    #e8a04c 100%
+    var(--accent-soft) 100%
   );
 
   -webkit-background-clip: text;
@@ -686,7 +697,7 @@ p {
   margin: 8px auto 0;
 
   padding-bottom: 4px;
-  border-bottom: 1px solid rgba(217, 138, 58, 0.7);
+  border-bottom: 1px solid rgba(208, 111, 60, 0.64);
 }
 /* DESIGN IMAGE */
 
@@ -712,15 +723,6 @@ p {
   background: url("3.JPG") center / cover no-repeat;
 }
 
-.chapter-shade {
-  position: absolute;
-  inset: 0;
-  z-index: -2;
-  background:
-    radial-gradient(ellipse at 18% 82%, rgba(242, 184, 112, 0.12), transparent 42%),
-    linear-gradient(to top, rgba(14, 12, 16, 0.58), transparent 62%),
-    linear-gradient(to right, rgba(14, 12, 16, 0.30), transparent 72%);
-}
 
 /* PROGRAM */
 
@@ -747,7 +749,7 @@ p {
   inset: 0;
   z-index: -2;
   background:
-    radial-gradient(ellipse at 12% 48%, rgba(242, 184, 112, 0.10), transparent 38%),
+    radial-gradient(ellipse at 12% 48%, rgba(208, 111, 60, 0.10), transparent 38%),
     linear-gradient(to right, rgba(247, 243, 238, 0.92), rgba(247, 243, 238, 0.58) 62%, transparent),
     linear-gradient(to top, rgba(247, 243, 238, 0.88), transparent 66%);
 }
@@ -768,7 +770,7 @@ p {
 }
 .program-section {
   position: relative;
-  border-bottom: 1px solid rgba(217, 138, 58, 0.55);
+  border-bottom: 1px solid rgba(208, 111, 60, 0.48);
 }
 
 .timeline-list {
@@ -784,7 +786,7 @@ p {
   top: 10px;
   bottom: 20px;
   width: 1px;
-  background: #D98A3A;
+  background: var(--accent);
 }
 
 .timeline-item {
@@ -857,7 +859,7 @@ p {
   line-height: 1.45;
   text-transform: uppercase;
   cursor: pointer;
-  border-bottom: 1px solid #f4b266;
+  border-bottom: 1px solid var(--accent-soft);
   transition: color .25s ease, border-color .25s ease, transform .25s ease;
 }
 
@@ -867,8 +869,8 @@ p {
 }
 
 .timeline-info span a:hover {
-  color: #f4b266;
-  border-bottom-color: #f4b266;
+  color: var(--accent-soft);
+  border-bottom-color: var(--accent-soft);
   transform: translateY(-2px);
 }
 
@@ -908,19 +910,21 @@ p {
   width: 5px;
   height: 5px;
   border-radius: 50%;
-  background: #f2b870;
+  background: var(--accent-light);
 }
 /* ROUTE / EVENT CONCEPT */
 
 .sunset-message {
   flex: 0 0 auto;
-  margin: 34px 0 8px;
+  width: 100%;
+  max-width: 780px;
+  margin: 34px auto 18px;
   padding: 0 32px;
-  text-align: left;
-  white-space: nowrap;
+  text-align: center;
+  white-space: normal;
   color: rgba(26, 22, 32, 0.72);
   font-family: var(--sans);
-  font-size: 30px;
+  font-size: clamp(18px, 2.2vw, 30px);
   font-weight: 600;
   line-height: 1.7;
 }
@@ -941,14 +945,6 @@ p {
   padding-top: 0;
 }
 
-.sunset-message {
-  margin: 0 0 10px;
-  padding: 0 22px;
-  text-align: left;
-  font-size: 14px;
-  line-height: 1.65;
-  color: rgba(26, 22, 32, 0.72);
-}
 
 .intelligence-photo {
   width: 100%;
@@ -974,7 +970,7 @@ p {
   max-width: 560px;
   margin: 22px 0 0;
   padding: 24px 0 0;
-  border-top: 1px solid rgba(217, 138, 58, 0.5);
+  border-top: 1px solid rgba(208, 111, 60, 0.42);
 
 }
 
@@ -1009,7 +1005,7 @@ p {
 .recommendation {
   max-width: 560px;
   padding-top: 24px;
-  border-top: 1px solid rgba(217, 138, 58, 0.5);
+  border-top: 1px solid rgba(208, 111, 60, 0.42);
 }
 
 .recommendation strong {
@@ -1056,15 +1052,15 @@ p {
   color: #1a1620;
   font-weight: 700;
   text-decoration: none;
-  border-bottom: 1px solid #f4b266;
+  border-bottom: 1px solid var(--accent-soft);
   padding-bottom: 2px;
   transition: color .25s ease, border-color .25s ease;
   cursor: pointer;
 }
 
 .recommendation a:hover {
-  color: #f4b266;
-  border-bottom-color: #f4b266;
+  color: var(--accent-soft);
+  border-bottom-color: var(--accent-soft);
 }
 
 /* RSVP */
@@ -1072,8 +1068,8 @@ p {
 .rsvp {
   padding: clamp(80px, 13vh, 140px) 0;
   background:
-    radial-gradient(ellipse at 82% 10%, rgba(242, 184, 112, 0.10), transparent 40%),
-    radial-gradient(ellipse at 12% 90%, rgba(202, 116, 32, 0.07), transparent 36%),
+    radial-gradient(ellipse at 82% 10%, rgba(208, 111, 60, 0.10), transparent 40%),
+    radial-gradient(ellipse at 12% 90%, rgba(208, 111, 60, 0.07), transparent 36%),
     var(--cream-warm);
 }
 
@@ -1117,8 +1113,8 @@ p {
 .submit-btn {
   background: var(--violet-dp);
   color: var(--white);
-  border: 1px solid rgba(242, 184, 112, 0.18);
-  box-shadow: 0 10px 36px rgba(202, 116, 32, 0.20);
+  border: 1px solid rgba(208, 111, 60, 0.18);
+  box-shadow: 0 10px 36px rgba(208, 111, 60, 0.20);
 }
 
 .rsvp-decline {
@@ -1130,11 +1126,11 @@ p {
 .rsvp-accept:hover,
 .submit-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 14px 42px rgba(202, 116, 32, 0.25);
+  box-shadow: 0 14px 42px rgba(208, 111, 60, 0.25);
 }
 
 .rsvp-decline:hover {
-  border-color: rgba(202, 116, 32, 0.3);
+  border-color: rgba(208, 111, 60, 0.30);
   color: var(--violet-mid);
 }
 
@@ -1278,7 +1274,7 @@ p {
 .success:hover {
   transform: translateY(-2px);
   background: rgba(255, 252, 248, 0.92);
-  border-color: rgba(242, 184, 112, 0.34);
+  border-color: rgba(208, 111, 60, 0.34);
 }
 
 .success p {
@@ -1368,6 +1364,7 @@ p {
     width: 42px;
     height: 42px;
     right: 16px;
+    top: auto;
     bottom: 16px;
     font-size: 17px;
   }
@@ -1508,7 +1505,7 @@ p {
 
   .event-shade {
     background:
-      radial-gradient(ellipse at 50% 10%, rgba(242, 184, 112, 0.10), transparent 40%),
+      radial-gradient(ellipse at 50% 10%, rgba(208, 111, 60, 0.10), transparent 40%),
       linear-gradient(to bottom, rgba(247, 243, 238, 0.90), rgba(247, 243, 238, 0.96));
   }
 
@@ -1583,20 +1580,26 @@ p {
     display: block;
   }
 
-  .split-visual {
-    height: auto;
-    min-height: 0;
-     padding-top: 80px;
-    display: block;
-  }
+.split-visual {
+  height: auto;
+  min-height: 0;
+  padding-top: 72px;
 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
   .sunset-message {
-    margin: 0 0 4px;
+    width: 100%;
+    max-width: 330px;
+    margin: 0 auto 24px;
     padding: 0 18px;
-    text-align: left;
+    text-align: center;
     white-space: normal;
-    font-size: 12.5px;
-    line-height: 1.55;
+    font-size: 17px;
+    line-height: 1.65;
+    font-weight: 500;
+    letter-spacing: -0.01em;
   }
 
   .intelligence-photo {
@@ -1712,9 +1715,7 @@ p {
     letter-spacing: 0.09em;
   }
 
-  .split-visual {
-    min-height: 0;
-  }
+  
 
   .event-content h2,
   .rsvp h2 {
@@ -1760,22 +1761,6 @@ p {
     animation: none;
   }
 }
-@media (max-width: 768px) {
-  .dress-photo {
-    width: 100vw;
-    max-width: none;
-    margin-left: calc(50% - 50vw);
-    margin-right: calc(50% - 50vw);
-    margin-top: 28px;
-    margin-bottom: 32px;
-  }
-
-  .dress-photo img {
-    width: 100%;
-    display: block;
-    border-radius: 0;
-  }
-}
 @media (min-width: 981px) {
   .route-experience {
     display: grid;
@@ -1784,11 +1769,7 @@ p {
     min-height: 100vh;
   }
 
-  .split-visual {
-    height: 100vh;
-    min-height: 100vh;
-    padding-top: 0;
-  }
+ 
 
   .intelligence-photo {
     width: 100%;
@@ -1854,26 +1835,5 @@ p {
   .recommendation li {
     font-size: 14px;
     line-height: 1.65;
-  }
-}
-@media (min-width: 981px) {
-  .split-visual {
-    height: 100vh;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    padding-top: 0;
-  }
-
-  .sunset-message {
-    flex: 0 0 auto;
-    margin: 0;
-    padding: 12px 22px 10px;
-  }
-
-  .intelligence-photo {
-    flex: 1 1 auto;
-    height: auto;
-    min-height: 0;
   }
 }
